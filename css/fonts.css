@@ -1,0 +1,7 @@
+/* font-family: "aerovias"; */
+@font-face {
+	font-family: "gilroy-extrabold";
+	 src: url('../fonts/gilroy-extrabold.eot?') format('eot'),
+         url('../fonts/gilroy-extrabold.woff') format('woff'),
+         url('../fonts/gilroy-extrabold.ttf')  format('truetype');
+}
