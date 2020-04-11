@@ -1,44 +1,46 @@
-//webpack.config.js
-const path = require('path');
 const webpack = require('webpack');
+const path = require('path');
+
+const PATHS = {
+    src: path.join(__dirname, './src/js/'),
+    dist: path.join(__dirname, './js'),
+    assets: '/'
+}
+
 
 module.exports = {
-    entry: "./src/js/index.js",
+    mode: 'development',
+    devtool: 'cheap-module-eval-source-map',
+    externals: {
+        path: PATHS
+    },
+
+    entry: {
+        app: `${PATHS.src}index.js`
+    },
+
     output: {
-        path: path.resolve(__dirname, './js'),
-        filename: "app.min.js"
+        filename: "app.min.js",
+        path: PATHS.dist
     },
-    resolve: {
-        // Add '.ts' and '.tsx' as a resolvable extension.
-        extensions: [".ts", ".tsx", ".js", ".json"]
-    },
-    //devtool: 'source-map',
-    module: {
-        // rules:[
-        //     {
-        //         test: /\.js$/,
-        //         exclude: /node_modules/,
-        //         use: {
-        //             loader: "babel-loader",
-        //             options: { presets: ["es2015"] }
-        //         }
-        //     }
-        // ]
-        loaders: [
-            // all files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'
-            { test: /\.js?$/, loader: "babel-loader" }
+
+    module:{
+        rules:[
+            {
+                test: /\.js$/,
+                loader:"babel-loader",
+                exclude:"/node_modules/"
+            }
         ]
     },
     plugins: [
         new webpack.ProvidePlugin({
             $: 'jquery',
-            jQuery: 'jquery'
+            JQ: 'jquery'
+        }),
+        new webpack.SourceMapDevToolPlugin({
+            filename: `[file].map`
         })
-        // new webpack.optimize.UglifyJsPlugin({
-        //     compress: {
-        //         warnings: false
-        //     },
-        //     sourceMap: true
-        // })
     ]
+
 }

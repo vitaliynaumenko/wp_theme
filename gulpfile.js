@@ -1,57 +1,56 @@
+//base part
 
-// /base part
-let gulp = require('gulp'),
-    rename  = require('gulp-rename'),
+const {src, dest, parallel, series, watch} = require('gulp'),
+    rename = require('gulp-rename'),
     sourcemaps = require('gulp-sourcemaps'),
-    webpack  = require('webpack'),
-    babel = require("babel-core"),
-    gutil    = require('gulp-util'),
-    notifier = require('node-notifier')
+    webpack = require('webpack'),
+    gutil = require('gulp-util'),
+    notifier = require('node-notifier'),
+    imagemin = require('gulp-imagemin'),
+    pug = require('gulp-pug'),
+    connect = require('gulp-connect')
 
 //css part
-let sass = require('gulp-sass'),
+let scss = require('gulp-sass'),
+    concat = require('gulp-concat'),
     cleanCSS = require('gulp-clean-css'),
     autoprefixer = require('gulp-autoprefixer');
 
 let webpackConfig = require('./webpack.config.js');
-let statsLog      = { // для красивых логов в консоли
+let statsLog = { // для красивых логов в консоли
     colors: true,
     reasons: true
 };
-function swallowError(error){
+
+function swallowError(error) {
     console.log(error.toString());
     this.emit('end');
 }
 
-gulp.task('default', ['gulp_watch']);
 
-gulp.task('gulp_watch', function () {
-    gulp.watch('./src/scss/**/*.scss', ['styles']);
-    gulp.watch('./src/js/**/*.js', ['scripts']);
-    //gulp.watch('./src/pug/**/*.pug', ['views']);
-});
+//  task style
 
-gulp.task('styles', function () {
-    return gulp.src('./src/scss/main.scss')
+let styles = () => {
+    return src('./src/scss/main.scss')
         .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
+        // .pipe(less().on('error', less.logError))
         .on('error', swallowError)
-        .pipe(autoprefixer({
-            browsers: ['last 20 versions', '> 5%'],
-            cascade: false
+        .pipe(scss({
+            includePaths: ['node_modules']
         }))
         .pipe(cleanCSS())
         .pipe(rename('style.min.css'))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./css'));
-});
+        .pipe(dest('./css'))
+        .pipe(connect.reload())
 
+}
 
-gulp.task('scripts', (done) => {
-
+// task js
+let scripts = (done) => {
     console.log(done);
 
-    function onError(error) {
+    const onError = (error) => {
         let formatedError = new gutil.PluginError('webpack', error);
 
         notifier.notify({ // чисто чтобы сразу узнать об ошибке
@@ -62,27 +61,46 @@ gulp.task('scripts', (done) => {
         done(formatedError);
     }
 
-    function onSuccess(detailInfo) {
-        gutil.log('[webpack]', detailInfo);
-        done();
+    const onSuccess = (detailInfo) => {
+        console.log(detailInfo);
+        done()
     }
 
-    function onComplete(error, stats) {
+    const  onComplete = (error, stats) => {
         if (error) { // кажется еще не сталкивался с этой ошибкой
             onError(error);
-        } else if ( stats.hasErrors() ) { // ошибки в самой сборке, к примеру "не удалось найти модуль по заданному пути"
-            onError( stats.toString(statsLog) );
+        } else if (stats.hasErrors()) { // ошибки в самой сборке, к примеру "не удалось найти модуль по заданному пути"
+            onError(stats.toString(statsLog));
         } else {
-            onSuccess( stats.toString(statsLog) );
+            onSuccess(stats.toString(statsLog));
         }
+
     }
 
     // run webpack
     webpack(webpackConfig, onComplete);
 
-});
-// gulp.task('views', function() {
-//     return gulp.src('./src/pug/index.pug')
-//         .pipe(pug())
-//         .pipe(gulp.dest('./'));
-// });
+
+}
+
+
+let images = () => {
+    return src('./src/images/*.*')
+        .pipe(dest('./images/'))
+        .pipe(connect.reload())
+
+}
+
+
+let watchFiles = () => {
+    watch('./src/**/*.scss', styles);
+    watch('./src/**/*.js',  scripts );
+    watch('./src/images/*', images);
+}
+
+
+exports.styles = styles;
+exports.scripts = scripts;
+exports.images = images;
+exports.watch = watch;
+exports.default = series(series(styles, scripts, images), parallel(watchFiles))
