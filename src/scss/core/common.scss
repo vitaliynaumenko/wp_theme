@@ -49,11 +49,9 @@ img{
 body, html{
   height: 100%;
   font-size: 16px;
+
   //font-family: $f-stack;
   //font-weight: $thin;
-}
-.globwrap{
-  min-height: 100%;
 }
 p{
   margin: 0 0 10px 0;
@@ -68,19 +66,8 @@ p{
   background-position: 50% 50%;
   background-size: contain;
 }
-.dib {
-  display: inline-block;
-  vertical-align: top;
-}
-.d-table{
-  display: table;
-  width: 100%;
-}
-.d-cell{
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-}
+
+
 .slick-slide{
   outline: none;
   img{
@@ -131,29 +118,7 @@ h4{
 .modal_active {
   overflow: hidden;
 }
-.modal_div {
-  width: 800px;
-  height: 448px;
-  position: fixed;
-  top: 45%; /* отступаем сверху 45%, остальные 5% подвинет скрипт */
-  left: 50%;
-  margin-left: -400px;
-  margin-top: -224px;
-  display: none;
-  z-index: 999;
-  opacity: 0;
-  background: $white;
-  .modal_close {
-    width: 32px;
-    height: 32px;
-    position: absolute;
-    top: 17px;
-    right: -50px;
-    cursor: pointer;
-    display: block;
-    //background: url("../images/close.png") no-repeat;
-  }
-}
+
 /* Подложка */
 .modal_overlay {
   z-index: 99;
@@ -168,26 +133,12 @@ h4{
   display: none;
 }
 
-.wrapp{
-  position: absolute;
-  max-width: 1920px;
-  width: 100%;
-  margin: 0 auto;
-}
+
 .section{
   position: relative;
 }
-.container-wr {
-  max-width: 1170px;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin: 0 auto;
-}
-.flex-row{
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px
-}
+
+
+
 
 

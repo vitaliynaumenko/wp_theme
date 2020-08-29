@@ -1,3 +1,5 @@
 node_modules/*
 .idea/*
 *.mp4/*
+js/*
+css/*
