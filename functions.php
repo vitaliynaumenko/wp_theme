@@ -1,7 +1,7 @@
 <?php
 /* css and js init */
 function load_script(){
-	wp_enqueue_script('my_scripts', get_template_directory_uri() . '/js/app.min.js', '' , true, true);
+	wp_enqueue_script('my_scripts', get_template_directory_uri() . '/js/app.min.js' );
 }
 add_action( 'wp_enqueue_scripts', 'load_script' );
 

@@ -1,6 +1,2 @@
-$(document).ready(function () {
 
-});
-
-
-
+alert('asdasdasdasd')
